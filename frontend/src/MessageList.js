@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import './MessageList.css';
@@ -9,15 +9,11 @@ function MessageList({ refreshTrigger }) {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const pageSize = 20; // Number of messages per page
     const navigate = useNavigate();
     const messagesEndRef = useRef(null);
-    const observer = useRef();
 
-    // Function to fetch messages with pagination
-    const fetchMessages = async (pageNum = 1, append = false) => {
+    // Fetch messages from the API
+    const fetchMessages = async () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
@@ -28,7 +24,7 @@ function MessageList({ refreshTrigger }) {
                 return;
             }
 
-            const response = await fetch(`${BACKEND_URL}/api/messages/?page=${pageNum}&page_size=${pageSize}`, {
+            const response = await fetch(`${BACKEND_URL}/api/messages/?limit=10`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -50,22 +46,9 @@ function MessageList({ refreshTrigger }) {
             }
 
             const data = await response.json();
-            const newMessages = data.messages || [];
-
-            // Check if we've reached the end of available messages
-            if (newMessages.length < pageSize) {
-                setHasMore(false);
-            } else {
-                setHasMore(true);
-            }
-
-            // Either append new messages or replace existing ones
-            if (append) {
-                setMessages(prevMessages => [...prevMessages, ...newMessages]);
-            } else {
-                setMessages(newMessages);
-            }
-
+            // Reverse the messages array so newest messages appear at the bottom
+            const reversedMessages = [...(data.messages || [])].reverse();
+            setMessages(reversedMessages);
             setError(null);
         } catch (err) {
             console.error('Error fetching messages:', err);
@@ -75,41 +58,17 @@ function MessageList({ refreshTrigger }) {
         }
     };
 
-    // Initial load and refresh
+    // Fetch messages on initial load and when refreshTrigger changes
     useEffect(() => {
-        setPage(1);
-        setHasMore(true);
-        fetchMessages(1, false);
+        fetchMessages();
     }, [refreshTrigger]);
 
-    // Load more messages when page changes
+    // Scroll to bottom when messages change
     useEffect(() => {
-        if (page > 1) {
-            fetchMessages(page, true);
-        }
-    }, [page]);
-
-    // Setup intersection observer for infinite scrolling
-    const lastMessageRef = useCallback(node => {
-        if (loading) return;
-
-        if (observer.current) observer.current.disconnect();
-
-        observer.current = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && hasMore) {
-                setPage(prevPage => prevPage + 1);
-            }
-        });
-
-        if (node) observer.current.observe(node);
-    }, [loading, hasMore]);
-
-    // Scroll to bottom when messages change (only for initial load)
-    useEffect(() => {
-        if (page === 1 && messages.length > 0) {
+        if (messages.length > 0) {
             scrollToBottom();
         }
-    }, [messages, page]);
+    }, [messages]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -123,50 +82,32 @@ function MessageList({ refreshTrigger }) {
 
     return (
         <div className="message-list">
-            <h2>Your Messages</h2>
+            {loading && <p className="loading">Loading messages...</p>}
 
             {error && <p className="error">{error}</p>}
 
             {!loading && !error && messages.length === 0 && (
-                <p>You don&apos;t have any messages yet.</p>
+                <p className="no-messages">You don&apos;t have any messages yet.</p>
             )}
 
             {messages.length > 0 && (
-                <div>
-                    <ul className="messages">
-                        {messages.map((message, index) => {
-                            // Apply ref to last message for infinite scrolling
-                            const messageClass = message.is_from_user ? 'message-item outgoing' : 'message-item incoming';
+                <ul className="messages">
+                    {messages.map((message, index) => {
+                        const messageClass = message.is_from_user
+                            ? "message-item outgoing"
+                            : "message-item incoming";
 
-                            if (index === messages.length - 1) {
-                                return (
-                                    <li
-                                        ref={lastMessageRef}
-                                        key={index}
-                                        className={messageClass}
-                                    >
-                                        <div className="message-content">{message.content}</div>
-                                        <div className="message-time">
-                                            Posted: {formatDate(message.posted_time)}
-                                        </div>
-                                    </li>
-                                );
-                            } else {
-                                return (
-                                    <li key={index} className={messageClass}>
-                                        <div className="message-content">{message.content}</div>
-                                        <div className="message-time">
-                                            Posted: {formatDate(message.posted_time)}
-                                        </div>
-                                    </li>
-                                );
-                            }
-                        })}
-                        <div ref={messagesEndRef} />
-                    </ul>
-
-                    {loading && <p className="loading-more">Loading more messages...</p>}
-                </div>
+                        return (
+                            <li key={message.id || index} className={messageClass}>
+                                <div className="message-content">{message.content}</div>
+                                <div className="message-time">
+                                    Posted: {formatDate(message.posted_time)}
+                                </div>
+                            </li>
+                        );
+                    })}
+                    <div ref={messagesEndRef} />
+                </ul>
             )}
         </div>
     );

@@ -79,6 +79,7 @@ class User:
         messages = sorted(
             self.messages,
             key=lambda x: x.posted_time,
+            reverse=True,
         )
             
         # Limit number of messages

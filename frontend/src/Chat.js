@@ -68,9 +68,10 @@ function Chat() {
 
     return (
         <div className="chat-container">
-            <h2>Chat</h2>
-
-            <MessageList refreshTrigger={refreshMessages} />
+            <h2 className="chat-title">Chat</h2>
+            <div className="chat-content">
+                <MessageList refreshTrigger={refreshMessages} />
+            </div>
 
             <div className="message-input-container">
                 <input
