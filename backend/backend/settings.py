@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'api',
+    'pymongo',
 ]
 
 MIDDLEWARE = [
@@ -77,12 +78,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = {}
 
 
 # Password validation
@@ -128,3 +124,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True  # Only for development
+
+# MongoDB settings
+MONGODB_SETTINGS = {
+    'db': 'your_database_name',
+    'host': 'localhost',
+    'port': 27017,
+    'username': 'your_username',  # Optional
+    'password': 'your_password',  # Optional
+}

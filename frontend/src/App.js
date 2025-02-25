@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
+
 import logo from './logo.svg';
 import './App.css';
+import RegistrationForm from './RegistrationForm';
+import LoginForm from './LoginForm';
+import { BACKEND_URL } from './config';
+
 
 function App() {
   const [name, setName] = useState('');
@@ -8,7 +13,7 @@ function App() {
 
   const handleSubmit = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/greet/', {
+      const res = await fetch(`${BACKEND_URL}/api/greet/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,6 +39,8 @@ function App() {
         />
         <button onClick={handleSubmit}>Greet</button>
         <p>{response}</p>
+        <RegistrationForm />
+        <LoginForm />
       </header>
     </div>
   );
