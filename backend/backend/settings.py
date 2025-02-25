@@ -127,9 +127,7 @@ CORS_ALLOW_ALL_ORIGINS = True  # Only for development
 
 # MongoDB settings
 MONGODB_SETTINGS = {
-    'db': 'your_database_name',
+    'db': 'advisor',
     'host': 'localhost',
     'port': 27017,
-    'username': 'your_username',  # Optional
-    'password': 'your_password',  # Optional
 }

@@ -1,6 +1,7 @@
 from pymongo import MongoClient
-from config import MONGODB_URI, MONGODB_DB_NAME
+
+from django.conf import settings
 
 # Initialize the database client
-client = MongoClient(MONGODB_URI)
-db = client[MONGODB_DB_NAME]
+client = MongoClient(settings.MONGODB_SETTINGS['host'], settings.MONGODB_SETTINGS['port'])
+db = client[settings.MONGODB_SETTINGS['db']]

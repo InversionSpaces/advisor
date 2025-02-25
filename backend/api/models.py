@@ -1,9 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from .db import db
 from uuid import uuid4
 
-# User model
-
+from .db import db
 
 class User:
     def __init__(self, username, password_hash, _id):
