@@ -1,41 +1,77 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { BACKEND_URL } from './config';
 
 function Chat() {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/messages/`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
-                const data = await response.json();
-                setMessages(data.messages);
-            } catch (error) {
-                console.error('Error fetching messages:', error);
-            }
-        };
+        // Check if token exists in localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // Redirect to login if no token is found
+            navigate('/login');
+            return;
+        }
 
-        fetchMessages();
-    }, []);
+        // const fetchMessages = async () => {
+        //     try {
+        //         const response = await fetch(`${BACKEND_URL}/api/messages/`, {
+        //             headers: {
+        //                 'Authorization': `Bearer ${token}`,
+        //             },
+        //         });
+
+        //         // If unauthorized, redirect to login
+        //         if (response.status === 401) {
+        //             localStorage.removeItem('token');
+        //             localStorage.removeItem('refreshToken');
+        //             navigate('/login');
+        //             return;
+        //         }
+
+        //         const data = await response.json();
+        //         setMessages(data.messages);
+        //     } catch (error) {
+        //         console.error('Error fetching messages:', error);
+        //     }
+        // };
+
+        // fetchMessages();
+    }, [navigate]);
 
     const handleSendMessage = async () => {
         if (!newMessage.trim()) return;
+
+        // Check if token exists in localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // Redirect to login if no token is found
+            navigate('/login');
+            return;
+        }
 
         try {
             const response = await fetch(`${BACKEND_URL}/api/messages/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({ message: newMessage }),
             });
+
+            // If unauthorized, redirect to login
+            if (response.status === 401) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('refreshToken');
+                navigate('/login');
+                return;
+            }
+
             const data = await response.json();
             if (response.ok) {
                 setMessages([...messages, data.message]);

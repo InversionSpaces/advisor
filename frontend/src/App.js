@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 
 import './App.css';
 import RegistrationForm from './RegistrationForm';
@@ -24,7 +24,7 @@ function App() {
           <h1>Advisor</h1>
         </header>
         <Routes>
-          <Route path="/" element={<LoginForm />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/register" element={<RegistrationForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/chat" element={<Chat />} />

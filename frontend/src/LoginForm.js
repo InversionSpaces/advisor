@@ -21,11 +21,16 @@ function LoginForm() {
             });
             const data = await response.json();
             if (response.ok) {
-                localStorage.setItem('token', data.token);
-                setMessage('Login successful!');
-                navigate('/chat');
+                if (data.refresh && data.access) {
+                    localStorage.setItem('refreshToken', data.refresh);
+                    localStorage.setItem('token', data.access);
+                    setMessage('Login successful!');
+                    navigate('/chat');
+                } else {
+                    setMessage('Invalid response from server. Missing authentication tokens.');
+                }
             } else {
-                setMessage(data.message || 'Login failed');
+                setMessage(data.message || data.error || 'Login failed');
             }
         } catch (error) {
             setMessage('An error occurred. Please try again.');
