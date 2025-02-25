@@ -9,10 +9,10 @@ import Chat from './Chat';
 function NavigationLinks() {
   const location = useLocation();
   return (
-    <>
+    <div className="nav-links">
       {location.pathname === '/login' && <Link to="/register">Register</Link>}
       {location.pathname === '/register' && <Link to="/login">Login</Link>}
-    </>
+    </div>
   );
 }
 
@@ -22,6 +22,7 @@ function App() {
       <div className="App">
         <header className="App-header">
           <h1>Advisor</h1>
+          <NavigationLinks />
         </header>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
@@ -29,7 +30,6 @@ function App() {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/chat" element={<Chat />} />
         </Routes>
-        <NavigationLinks />
       </div>
     </Router>
   );

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 import { BACKEND_URL } from './config';
 
-function RegistrationForm({ onSuccess }) {
+function RegistrationForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,7 +23,7 @@ function RegistrationForm({ onSuccess }) {
             const data = await response.json();
             setMessage(data.message || data.error);
             if (response.ok) {
-                onSuccess();
+                navigate('/login');
             }
         } catch (error) {
             setMessage('An error occurred. Please try again.');

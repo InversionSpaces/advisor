@@ -1,12 +1,24 @@
 .message-list {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0;
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-list h2 {
+    margin-top: 0;
 }
 
 .messages {
     list-style: none;
     padding: 0;
+    max-height: none;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    flex-grow: 1;
 }
 
 .message-item {

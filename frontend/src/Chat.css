@@ -2,11 +2,20 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.chat-container h2 {
+    margin-top: 0;
 }
 
 .message-input-container {
     display: flex;
-    margin-bottom: 20px;
+    margin-top: auto;
+    padding-top: 20px;
 }
 
 .message-input {

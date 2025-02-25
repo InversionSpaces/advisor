@@ -1,8 +1,37 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
-from datetime import datetime
+from datetime import datetime, timezone
 
 from .db import db
+
+class Message:
+    """
+    A class representing a user message.
+    
+    This is not a database model but a helper class to encapsulate
+    message-related functionality.
+    """
+    def __init__(self, content, posted_time=None, message_id=None):
+        self.content = content
+        self.posted_time = posted_time or datetime.now(timezone.utc)
+        self.message_id = message_id or str(uuid4())
+        
+    def to_dict(self):
+        """Convert Message object to dictionary for storage in MongoDB"""
+        return {
+            'content': self.content,
+            'posted_time': self.posted_time,
+            'message_id': self.message_id
+        }
+    
+    @classmethod
+    def from_dict(cls, message_dict):
+        """Create a Message object from a dictionary"""
+        return cls(
+            content=message_dict.get('content'),
+            posted_time=message_dict.get('posted_time'),
+            message_id=message_dict.get('message_id')
+        )
 
 class User:
     def __init__(self, username, password_hash, _id, messages=None):
@@ -16,25 +45,25 @@ class User:
         self.is_anonymous = False
 
     def save(self):
+        # Convert Message objects to dictionaries for MongoDB storage
+        message_dicts = [msg.to_dict() for msg in self.messages]
+        
         db.users.update_one(
             {'_id': self._id},
             {'$set': {
                 'username': self.username,
                 'password_hash': self.password_hash,
-                'messages': self.messages
+                'messages': message_dicts
             }},
             upsert=True
         )
 
     def add_message(self, content):
-        message = {
-            'content': content,
-            'posted_time': datetime.utcnow()
-        }
+        message = Message(content=content)
         self.messages.append(message)
         self.save()
         
-    def get_messages(self, limit=None, sort_by='posted_time', reverse=True):
+    def get_messages(self, limit=None):
         """
         Get user messages with optional filtering
         
@@ -44,17 +73,13 @@ class User:
             reverse (bool, optional): Sort in reverse order if True
             
         Returns:
-            list: Filtered and sorted messages
+            list: Filtered and sorted Message objects
         """
-        messages = self.messages.copy()
-        
         # Sort messages
-        if sort_by and messages:
-            messages = sorted(
-                messages,
-                key=lambda x: x.get(sort_by, ''),
-                reverse=reverse
-            )
+        messages = sorted(
+            self.messages,
+            key=lambda x: x.posted_time,
+        )
             
         # Limit number of messages
         if limit and isinstance(limit, int) and limit > 0:
@@ -65,7 +90,9 @@ class User:
     @classmethod
     def _from_db(cls, user_data):
         user = User(user_data['username'], user_data['password_hash'], user_data['_id'])
-        user.messages = user_data.get('messages', [])
+        # Convert message dictionaries to Message objects
+        message_dicts = user_data.get('messages', [])
+        user.messages = [Message.from_dict(msg) for msg in message_dicts]
         return user
 
     @staticmethod

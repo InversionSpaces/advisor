@@ -65,14 +65,11 @@ def messages(request):
             limit = int(request.query_params.get('limit', 0)) or None
         except ValueError:
             limit = None
-            
-        sort_by = request.query_params.get('sort_by', 'posted_time')
-        order = request.query_params.get('order', 'desc')
-        reverse = order.lower() != 'asc'  # Default to descending order
         
         # Get filtered messages
-        messages = user.get_messages(limit=limit, sort_by=sort_by, reverse=reverse)
-        
+        messages = user.get_messages(limit=limit)
+        messages = [msg.to_dict() for msg in messages]
+
         return Response({
             'count': len(messages),
             'messages': messages

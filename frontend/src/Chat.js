@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { BACKEND_URL } from './config';
@@ -9,6 +9,7 @@ function Chat() {
     const [newMessage, setNewMessage] = useState('');
     const [refreshMessages, setRefreshMessages] = useState(false);
     const navigate = useNavigate();
+    const messagesContainerRef = useRef(null);
 
     useEffect(() => {
         // Check if token exists in localStorage
@@ -67,23 +68,22 @@ function Chat() {
     };
 
     return (
-        <div className="chat-container">
+        <div className="chat-container" ref={messagesContainerRef}>
             <h2>Chat</h2>
 
+            {/* Don't use refreshMessages as a key, instead pass it as a prop */}
+            <MessageList refreshTrigger={refreshMessages} />
             <div className="message-input-container">
                 <input
                     type="text"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyPress}
                     placeholder="Type a message"
                     className="message-input"
                 />
                 <button onClick={handleSendMessage} className="send-button">Send</button>
             </div>
-
-            {/* Pass the refreshMessages state as a key to force re-render when a new message is sent */}
-            <MessageList key={refreshMessages} />
         </div>
     );
 }
