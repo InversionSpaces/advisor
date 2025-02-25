@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { BACKEND_URL } from './config';
 
@@ -6,6 +7,7 @@ function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -21,6 +23,7 @@ function LoginForm() {
             if (response.ok) {
                 localStorage.setItem('token', data.token);
                 setMessage('Login successful!');
+                navigate('/chat');
             } else {
                 setMessage(data.message || 'Login failed');
             }

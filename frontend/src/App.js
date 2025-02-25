@@ -1,29 +1,37 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 
 import './App.css';
 import RegistrationForm from './RegistrationForm';
 import LoginForm from './LoginForm';
+import Chat from './Chat';
 
+function NavigationLinks() {
+  const location = useLocation();
+  return (
+    <>
+      {location.pathname === '/login' && <Link to="/register">Register</Link>}
+      {location.pathname === '/register' && <Link to="/login">Login</Link>}
+    </>
+  );
+}
 
 function App() {
-  const [showLogin, setShowLogin] = useState(false);
-
-  const handleRegistrationSuccess = () => {
-    setShowLogin(true);
-  };
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Advisor</h1>
-      </header>
-      <div>
-        {showLogin ? <LoginForm /> : <RegistrationForm onSuccess={handleRegistrationSuccess} />}
-        <button onClick={() => setShowLogin(!showLogin)}>
-          {showLogin ? 'Switch to Register' : 'Switch to Login'}
-        </button>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <h1>Advisor</h1>
+        </header>
+        <Routes>
+          <Route path="/" element={<LoginForm />} />
+          <Route path="/register" element={<RegistrationForm />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/chat" element={<Chat />} />
+        </Routes>
+        <NavigationLinks />
       </div>
-    </div>
+    </Router>
   );
 }
 

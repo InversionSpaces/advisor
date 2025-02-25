@@ -1,11 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-import jwt
-import datetime
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
-from config import SECRET_KEY
-
 
 @api_view(['POST'])
 def register(request):
@@ -21,7 +18,12 @@ def register(request):
     user = User.create_user(username, password)
     user.save()
 
-    return Response({'message': 'User registered successfully.'}, status=201)
+    refresh = RefreshToken.for_user(user)
+    return Response({
+        'message': 'User registered successfully.',
+        'refresh': str(refresh),
+        'access': str(refresh.access_token)
+    }, status=201)
 
 
 @api_view(['POST'])
@@ -34,10 +36,7 @@ def login(request):
 
     user = User.find_by_username(username)
     if user and user.check_password(password):
-        token = jwt.encode({
-            'user_id': user._id,
-            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
-        }, SECRET_KEY, algorithm='HS256')
-        return Response({'token': token})
+        refresh = RefreshToken.for_user(user)
+        return Response({'refresh': str(refresh), 'access': str(refresh.access_token)})
 
     return Response({'error': 'Invalid credentials'}, status=401)
