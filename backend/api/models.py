@@ -33,6 +33,34 @@ class User:
         }
         self.messages.append(message)
         self.save()
+        
+    def get_messages(self, limit=None, sort_by='posted_time', reverse=True):
+        """
+        Get user messages with optional filtering
+        
+        Args:
+            limit (int, optional): Maximum number of messages to return
+            sort_by (str, optional): Field to sort by
+            reverse (bool, optional): Sort in reverse order if True
+            
+        Returns:
+            list: Filtered and sorted messages
+        """
+        messages = self.messages.copy()
+        
+        # Sort messages
+        if sort_by and messages:
+            messages = sorted(
+                messages,
+                key=lambda x: x.get(sort_by, ''),
+                reverse=reverse
+            )
+            
+        # Limit number of messages
+        if limit and isinstance(limit, int) and limit > 0:
+            messages = messages[:limit]
+            
+        return messages
 
     @classmethod
     def _from_db(cls, user_data):

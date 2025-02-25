@@ -1,4 +1,5 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .auth import MongoRefreshToken
 
@@ -41,16 +42,38 @@ def login(request):
 
     return Response({'error': 'Invalid credentials'}, status=401)
 
-@api_view(['POST'])
-def post_message(request):
-    content = request.data.get('message')
-    user = User.find_by_username(request.user.username)  # Assuming user is authenticated
+@api_view(['POST', 'GET'])
+@permission_classes([IsAuthenticated])
+def messages(request):
+    user = User.find_by_username(request.user.username)
     if not user:
         return Response({'error': 'User not found.'}, status=404)
+    
+    if request.method == 'POST':
+        # Handle posting a new message
+        content = request.data.get('message')
+        
+        if not content:
+            return Response({'error': 'Message content is required.'}, status=400)
 
-    if not content:
-        return Response({'error': 'Message content is required.'}, status=400)
-
-    user.add_message(content)
-
-    return Response({'message': 'Message posted successfully.'}, status=201)
+        user.add_message(content)
+        return Response({'message': 'Message posted successfully.'}, status=201)
+    
+    elif request.method == 'GET':
+        # Handle fetching messages with optional filtering
+        try:
+            limit = int(request.query_params.get('limit', 0)) or None
+        except ValueError:
+            limit = None
+            
+        sort_by = request.query_params.get('sort_by', 'posted_time')
+        order = request.query_params.get('order', 'desc')
+        reverse = order.lower() != 'asc'  # Default to descending order
+        
+        # Get filtered messages
+        messages = user.get_messages(limit=limit, sort_by=sort_by, reverse=reverse)
+        
+        return Response({
+            'count': len(messages),
+            'messages': messages
+        })

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { BACKEND_URL } from './config';
+import MessageList from './MessageList';
+import './Chat.css';
 
 function Chat() {
-    const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const [refreshMessages, setRefreshMessages] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -14,33 +16,7 @@ function Chat() {
         if (!token) {
             // Redirect to login if no token is found
             navigate('/login');
-            return;
         }
-
-        // const fetchMessages = async () => {
-        //     try {
-        //         const response = await fetch(`${BACKEND_URL}/api/messages/`, {
-        //             headers: {
-        //                 'Authorization': `Bearer ${token}`,
-        //             },
-        //         });
-
-        //         // If unauthorized, redirect to login
-        //         if (response.status === 401) {
-        //             localStorage.removeItem('token');
-        //             localStorage.removeItem('refreshToken');
-        //             navigate('/login');
-        //             return;
-        //         }
-
-        //         const data = await response.json();
-        //         setMessages(data.messages);
-        //     } catch (error) {
-        //         console.error('Error fetching messages:', error);
-        //     }
-        // };
-
-        // fetchMessages();
     }, [navigate]);
 
     const handleSendMessage = async () => {
@@ -72,31 +48,42 @@ function Chat() {
                 return;
             }
 
-            const data = await response.json();
             if (response.ok) {
-                setMessages([...messages, data.message]);
+                // Clear the input and trigger a refresh of the message list
                 setNewMessage('');
+                setRefreshMessages(prev => !prev);
+            } else {
+                console.error('Error sending message:', await response.json());
             }
         } catch (error) {
             console.error('Error sending message:', error);
         }
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSendMessage();
+        }
+    };
+
     return (
-        <div>
+        <div className="chat-container">
             <h2>Chat</h2>
-            <div>
-                {messages.map((msg, index) => (
-                    <p key={index}>{msg}</p>
-                ))}
+
+            <div className="message-input-container">
+                <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Type a message"
+                    className="message-input"
+                />
+                <button onClick={handleSendMessage} className="send-button">Send</button>
             </div>
-            <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type a message"
-            />
-            <button onClick={handleSendMessage}>Send</button>
+
+            {/* Pass the refreshMessages state as a key to force re-render when a new message is sent */}
+            <MessageList key={refreshMessages} />
         </div>
     );
 }
