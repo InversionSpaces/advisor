@@ -121,12 +121,6 @@ function MessageList({ refreshTrigger }) {
         return date.toLocaleString();
     };
 
-    const handleRefresh = () => {
-        setPage(1);
-        setHasMore(true);
-        fetchMessages(1, false);
-    };
-
     return (
         <div className="message-list">
             <h2>Your Messages</h2>
@@ -142,12 +136,14 @@ function MessageList({ refreshTrigger }) {
                     <ul className="messages">
                         {messages.map((message, index) => {
                             // Apply ref to last message for infinite scrolling
+                            const messageClass = message.is_from_user ? 'message-item outgoing' : 'message-item incoming';
+
                             if (index === messages.length - 1) {
                                 return (
                                     <li
                                         ref={lastMessageRef}
                                         key={index}
-                                        className="message-item"
+                                        className={messageClass}
                                     >
                                         <div className="message-content">{message.content}</div>
                                         <div className="message-time">
@@ -157,7 +153,7 @@ function MessageList({ refreshTrigger }) {
                                 );
                             } else {
                                 return (
-                                    <li key={index} className="message-item">
+                                    <li key={index} className={messageClass}>
                                         <div className="message-content">{message.content}</div>
                                         <div className="message-time">
                                             Posted: {formatDate(message.posted_time)}
@@ -172,10 +168,6 @@ function MessageList({ refreshTrigger }) {
                     {loading && <p className="loading-more">Loading more messages...</p>}
                 </div>
             )}
-
-            <button onClick={handleRefresh} className="refresh-btn">
-                Refresh
-            </button>
         </div>
     );
 }
