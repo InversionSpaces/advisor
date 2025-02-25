@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { BACKEND_URL } from './config';
+import './LoginForm.css';
 
 function LoginForm() {
     const [username, setUsername] = useState('');

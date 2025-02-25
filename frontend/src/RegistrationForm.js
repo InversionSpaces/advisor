@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
 import { BACKEND_URL } from './config';
+import './RegistrationForm.css';
 
 function RegistrationForm() {
     const [username, setUsername] = useState('');
