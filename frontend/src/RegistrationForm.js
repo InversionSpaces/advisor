@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import { BACKEND_URL } from './config';
 
-function RegistrationForm() {
+function RegistrationForm({ onSuccess }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -19,6 +20,9 @@ function RegistrationForm() {
             });
             const data = await response.json();
             setMessage(data.message || data.error);
+            if (response.ok) {
+                onSuccess();
+            }
         } catch (error) {
             setMessage('An error occurred. Please try again.');
         }
@@ -40,5 +44,9 @@ function RegistrationForm() {
         </form>
     );
 }
+
+RegistrationForm.propTypes = {
+    onSuccess: PropTypes.func.isRequired,
+};
 
 export default RegistrationForm; 

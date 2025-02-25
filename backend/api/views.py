@@ -8,12 +8,6 @@ from config import SECRET_KEY
 
 
 @api_view(['POST'])
-def greet(request):
-    name = request.data.get('name', '')
-    return Response({'message': f'Hello, {name}!'})
-
-
-@api_view(['POST'])
 def register(request):
     username = request.data.get('username')
     password = request.data.get('password')
