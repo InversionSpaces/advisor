@@ -12,6 +12,7 @@ class Message(BaseModel):
     """Model for a chat message"""
     text: str
     created_at: datetime
+    origin: str  # "user" or "ai"
 
 # API models
 class UserBase(BaseModel):
@@ -41,11 +42,13 @@ class UserUpdate(BaseModel):
 class MessageCreate(BaseModel):
     """Model for creating a new message"""
     text: str
+    origin: str = "user"  # Default to user, can be overridden for AI messages
 
 class MessageResponse(BaseModel):
     """Model for message response"""
     text: str
     created_at: str
+    origin: str
 
 class MessagesResponse(BaseModel):
     """Model for messages response"""

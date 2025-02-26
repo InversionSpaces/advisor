@@ -162,7 +162,7 @@ button:disabled {
 }
 
 .chat-section h2 {
-    align-self: flex-start;
+    align-self: center;
 }
 
 .about-me-section {
@@ -312,11 +312,21 @@ input[type="text"]::placeholder {
 
 .message {
     padding: 0.75rem 1rem;
-    background-color: var(--message-bg);
     border-radius: 8px;
     max-width: 85%;
-    align-self: flex-start;
     word-break: break-word;
+}
+
+.user-message {
+    background-color: rgba(79, 70, 229, 0.7);
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.ai-message {
+    background-color: var(--message-bg);
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
 }
 
 .message-text {
@@ -346,6 +356,31 @@ input[type="text"]::placeholder {
     white-space: nowrap;
     margin-top: 0;
     min-width: 80px;
+}
+
+.ai-status {
+    width: 100%;
+    text-align: center;
+    color: var(--text-color);
+    opacity: 0.7;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0.4;
+    }
 }
 
 @media (prefers-color-scheme: light) {

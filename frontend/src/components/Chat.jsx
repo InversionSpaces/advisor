@@ -37,14 +37,18 @@ const Chat = ({ userId }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!newMessage.trim()) {
+        if (!newMessage.trim() || isLoading) {
             return;
         }
 
         try {
             setIsLoading(true);
-            const message = await userApi.addMessage(userId, newMessage);
-            setMessages([...messages, message]);
+
+            // Send message to backend (which will also generate and save AI response)
+            const updatedMessages = await userApi.addMessage(userId, newMessage);
+
+            // Update local state with all messages (including the new AI response)
+            setMessages(updatedMessages.messages || []);
             setNewMessage('');
             setIsLoading(false);
         } catch (error) {
@@ -74,7 +78,7 @@ const Chat = ({ userId }) => {
                     <div className="no-messages">No messages yet. Start the conversation!</div>
                 ) : (
                     messages.map((message, index) => (
-                        <div key={index} className="message">
+                        <div key={index} className={`message ${message.origin === 'ai' ? 'ai-message' : 'user-message'}`}>
                             <div className="message-text">{message.text}</div>
                             <div className="message-time">{formatDate(message.created_at)}</div>
                         </div>
@@ -88,14 +92,18 @@ const Chat = ({ userId }) => {
                     type="text"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Type a message..."
+                    placeholder={isLoading ? "Processing..." : "Type a message..."}
                     disabled={isLoading}
                     maxLength={200}
                 />
                 <button type="submit" disabled={isLoading || !newMessage.trim()}>
-                    {isLoading ? 'Sending...' : 'Send'}
+                    {isLoading ? 'Processing...' : 'Send'}
                 </button>
             </form>
+
+            {isLoading && (
+                <div className="ai-status">Processing your message...</div>
+            )}
         </div>
     );
 };
