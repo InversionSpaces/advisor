@@ -85,6 +85,7 @@ const AboutMe = () => {
                     onChange={(e) => setAboutMe(e.target.value)}
                     placeholder="Share something about yourself..."
                     disabled={isLoading}
+                    maxLength={500}
                 />
 
                 <button type="submit" disabled={isLoading}>
@@ -93,7 +94,7 @@ const AboutMe = () => {
             </form>
 
             {message && (
-                <div className={`message ${isError ? 'error' : 'success-message'}`}>
+                <div className={isError ? 'error' : 'success-message'}>
                     {message}
                 </div>
             )}

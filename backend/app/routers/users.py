@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 from ..models.user import UserCreate, UserResponse, UserUpdate, serialize_user
 from ..database.mongodb import user_collection
 import uuid
+from datetime import datetime
 
 router = APIRouter(
     prefix="/users",
@@ -16,11 +17,21 @@ async def create_user(user: UserCreate):
     Returns the created user with a generated UUID.
     """
     user_id = str(uuid.uuid4())
+    current_time = datetime.utcnow()
+    
+    # Create history entry
+    history_entry = {
+        "text": user.about_me,
+        "created_at": current_time.isoformat()
+    }
     
     # Create user document
     user_data = {
         "_id": user_id,
-        "about_me": user.about_me
+        "about_me": user.about_me,
+        "history": [history_entry],
+        "created_at": current_time,
+        "updated_at": current_time
     }
     
     # Insert into database
@@ -39,6 +50,7 @@ async def create_user(user: UserCreate):
 async def get_user(user_id: str):
     """
     Get user information by user ID.
+    Returns only the latest about_me entry.
     """
     user = user_collection.find_one({"_id": user_id})
     
@@ -54,6 +66,7 @@ async def get_user(user_id: str):
 async def update_user(user_id: str, user_update: UserUpdate):
     """
     Update user's about_me information.
+    Internally adds a new entry to the history for later analysis.
     """
     # Check if user exists
     existing_user = user_collection.find_one({"_id": user_id})
@@ -63,10 +76,26 @@ async def update_user(user_id: str, user_update: UserUpdate):
             detail=f"User with ID {user_id} not found"
         )
     
+    current_time = datetime.utcnow()
+    
+    # Create history entry
+    history_entry = {
+        "text": user_update.about_me,
+        "created_at": current_time.isoformat()
+    }
+    
     # Update user
     result = user_collection.update_one(
         {"_id": user_id},
-        {"$set": {"about_me": user_update.about_me}}
+        {
+            "$set": {
+                "about_me": user_update.about_me,
+                "updated_at": current_time
+            },
+            "$push": {
+                "history": history_entry
+            }
+        }
     )
     
     if result.modified_count == 0:

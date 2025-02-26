@@ -1,7 +1,13 @@
-from pydantic import BaseModel, Field
-from typing import Optional
-import uuid
+from pydantic import BaseModel
+from datetime import datetime
 
+# Internal models (not exposed to API)
+class AboutMeEntry(BaseModel):
+    """Model for a single about_me entry with timestamp (internal use only)"""
+    text: str
+    created_at: datetime
+
+# API models
 class UserBase(BaseModel):
     """Base user model with about_me field"""
     about_me: str
@@ -28,6 +34,7 @@ class UserUpdate(BaseModel):
 
 def serialize_user(user) -> dict:
     """Convert MongoDB user document to dict"""
+    # Return only the latest about_me entry
     return {
         "id": str(user["_id"]),
         "about_me": user["about_me"]
