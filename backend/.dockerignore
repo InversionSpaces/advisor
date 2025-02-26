@@ -1,0 +1,68 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.env
+.venv
+env/
+
+# Distribution / packaging
+.Python
+dist/
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+pytest_cache/
+
+# Development tools
+.vscode/
+.idea/
+*.sublime-*
+
+# Git
+.git
+.github
+.gitignore
+
+# Documentation
+docs/
+README.md
+CHANGELOG.md
+LICENSE
+
+# Misc
+.DS_Store
+
+# Logs
+logs/
+*.log 

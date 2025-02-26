@@ -6,7 +6,6 @@ services:
     image: mongo:6.0
     container_name: advisor-mongodb
     restart: unless-stopped
-    network_mode: "host"
     environment:
       - MONGO_INITDB_DATABASE=advisor
     volumes:
@@ -20,7 +19,6 @@ services:
     container_name: advisor-frontend-build
     volumes:
       - frontend_build:/app/dist
-    network_mode: "host"
 
   # Backend service (serves API and static frontend)
   backend:
@@ -29,7 +27,6 @@ services:
       dockerfile: Dockerfile
     container_name: advisor-backend
     restart: unless-stopped
-    network_mode: "host"
     volumes:
       - frontend_build:/app/frontend/dist
     depends_on:
@@ -45,4 +42,4 @@ services:
 
 volumes:
   mongodb_data:
-  frontend_build: 
+  frontend_build:
