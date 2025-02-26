@@ -1,0 +1,43 @@
+# Git
+.git/
+.github/
+.gitignore
+
+# Docker
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+
+# Development environments
+.vscode/
+.idea/
+*.sublime-*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+.env
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Build directories
+dist/
+build/
+frontend/dist/
+frontend/build/
+
+# Misc
+.DS_Store
+*.log
+*.tmp
+.cache
+README.md
+CHANGELOG.md
+LICENSE 
