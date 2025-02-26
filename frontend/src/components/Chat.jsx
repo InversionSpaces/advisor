@@ -100,10 +100,6 @@ const Chat = ({ userId }) => {
                     {isLoading ? 'Processing...' : 'Send'}
                 </button>
             </form>
-
-            {isLoading && (
-                <div className="ai-status">Processing your message...</div>
-            )}
         </div>
     );
 };
