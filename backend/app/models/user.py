@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import List
 
 from pydantic import BaseModel
 
@@ -38,14 +38,6 @@ class UserResponse(UserBase):
 
     id: str
 
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "id": "123e4567-e89b-12d3-a456-426614174000",
-                "about_me": "I am a software developer interested in web technologies.",
-            }
-        }
-
 
 class UserUpdate(BaseModel):
     """Model for updating user information"""
@@ -57,7 +49,6 @@ class MessageCreate(BaseModel):
     """Model for creating a new message"""
 
     text: str
-    origin: str = "user"  # Default to user, can be overridden for AI messages
 
 
 class MessageResponse(BaseModel):

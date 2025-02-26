@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from datetime import timezone
 
 from fastapi import APIRouter, HTTPException, status
 
@@ -29,7 +30,7 @@ async def create_user(user: UserCreate):
     Returns the created user with a generated UUID.
     """
     user_id = str(uuid.uuid4())
-    current_time = datetime.utcnow()
+    current_time = datetime.now(timezone.utc)
 
     # Create history entry
     history_entry = {"text": user.about_me, "created_at": current_time.isoformat()}
@@ -85,7 +86,7 @@ async def update_user(user_id: str, user_update: UserUpdate):
             status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {user_id} not found"
         )
 
-    current_time = datetime.utcnow()
+    current_time = datetime.now(timezone.utc)
 
     # Create history entry
     history_entry = {"text": user_update.about_me, "created_at": current_time.isoformat()}
@@ -126,13 +127,13 @@ async def create_message(user_id: str, message: MessageCreate):
             status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {user_id} not found"
         )
 
-    current_time = datetime.utcnow()
+    current_time = datetime.now(timezone.utc)
 
     # Create message entry with origin
     message_entry = {
         "text": message.text,
         "created_at": current_time.isoformat(),
-        "origin": message.origin,
+        "origin": "user",
     }
 
     # Update user with the user message
