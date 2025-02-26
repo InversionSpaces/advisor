@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # MongoDB service
+  mongodb:
+    image: mongo:6.0
+    container_name: advisor-mongodb
+    restart: always
+    network_mode: "host"
+    environment:
+      - MONGO_INITDB_DATABASE=advisor
+    volumes:
+      - mongodb_data:/data/db
+
+  # Frontend build service (temporary, only used during build)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: advisor-frontend-build
+    volumes:
+      - frontend_build:/app/dist
+    network_mode: "host"
+
+  # Backend service (serves API and static frontend)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: advisor-backend
+    restart: always
+    network_mode: "host"
+    volumes:
+      - frontend_build:/app/frontend/dist
+    depends_on:
+      - mongodb
+      - frontend
+    environment:
+      - MONGODB_URI=mongodb://localhost:27017
+      - DB_NAME=advisor
+      - FRONTEND_PATH=/app/frontend/dist
+      - ENVIRONMENT=production
+      - HOST=0.0.0.0
+      - PORT=8000
+
+volumes:
+  mongodb_data:
+  frontend_build: 

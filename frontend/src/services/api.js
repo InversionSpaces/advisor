@@ -15,7 +15,7 @@ export const userApi = {
     // Create a new user
     createUser: async (aboutMe) => {
         try {
-            const response = await api.post('/users', { about_me: aboutMe });
+            const response = await api.post('/api/users', { about_me: aboutMe });
             return response.data;
         } catch (error) {
             console.error('Error creating user:', error);
@@ -26,7 +26,7 @@ export const userApi = {
     // Get user by ID
     getUser: async (userId) => {
         try {
-            const response = await api.get(`/users/${userId}`);
+            const response = await api.get(`/api/users/${userId}`);
             return response.data;
         } catch (error) {
             console.error('Error getting user:', error);
@@ -37,7 +37,7 @@ export const userApi = {
     // Update user's about_me
     updateUser: async (userId, aboutMe) => {
         try {
-            const response = await api.put(`/users/${userId}`, { about_me: aboutMe });
+            const response = await api.put(`/api/users/${userId}`, { about_me: aboutMe });
             return response.data;
         } catch (error) {
             console.error('Error updating user:', error);
@@ -48,7 +48,7 @@ export const userApi = {
     // Get user's messages
     getMessages: async (userId) => {
         try {
-            const response = await api.get(`/users/${userId}/messages`);
+            const response = await api.get(`/api/users/${userId}/messages`);
             return response.data;
         } catch (error) {
             console.error('Error getting messages:', error);
@@ -59,7 +59,7 @@ export const userApi = {
     // Add a new message
     addMessage: async (userId, messageText) => {
         try {
-            const response = await api.post(`/users/${userId}/messages`, {
+            const response = await api.post(`/api/users/${userId}/messages`, {
                 text: messageText
             });
             return response.data;

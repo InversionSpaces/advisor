@@ -1,7 +1,6 @@
 import os
-
-from dotenv import load_dotenv
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
@@ -10,17 +9,6 @@ load_dotenv()
 MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
 DB_NAME = os.getenv("DB_NAME", "advisor")
 
-# Create a MongoDB client
-client = MongoClient(MONGODB_URI)
+client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=5000)
 db = client[DB_NAME]
-
-# Collection for user profiles
 user_collection = db.users
-
-
-def get_db():
-    """
-    Get database connection.
-    Returns MongoDB database instance.
-    """
-    return db

@@ -1,5 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
+from pathlib import Path
 
 from .routers import users
 
@@ -14,6 +18,7 @@ app = FastAPI(
 origins = [
     "http://localhost:3000",  # React frontend
     "http://localhost:5173",  # Vite dev server
+    "*",  # Allow all origins in production
 ]
 
 app.add_middleware(
@@ -25,10 +30,38 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(users.router)
+app.include_router(users.router, prefix="/api")
 
-
-# Root endpoint
-@app.get("/")
+# Root API endpoint
+@app.get("/api")
 async def root():
     return {"message": "Welcome to the Advisor API", "docs": "/docs", "version": "0.1.0"}
+
+# Mount static files
+frontend_path = os.getenv("FRONTEND_PATH", "../frontend/dist")
+
+# Check if frontend build exists
+if os.path.exists(frontend_path):
+    # Serve static assets from the assets directory
+    if os.path.exists(os.path.join(frontend_path, "assets")):
+        app.mount("/assets", StaticFiles(directory=os.path.join(frontend_path, "assets")), name="assets")
+    
+    # Root endpoint - serve index.html for the root path
+    @app.get("/")
+    async def serve_root():
+        index_path = os.path.join(frontend_path, "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path)
+        return {"detail": "Frontend not built"}
+    
+    # Serve index.html for all other non-API routes to support SPA routing
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str, request: Request):
+        # Skip API routes and docs
+        if full_path.startswith(("api/", "docs", "redoc", "openapi.json")):
+            return {"detail": "Not Found"}
+            
+        index_path = os.path.join(frontend_path, "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path)
+        return {"detail": "Frontend not built"}
