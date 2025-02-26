@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { userApi } from '../services/api';
-import Chat from './Chat';
 
-const AboutMe = () => {
+const AboutMe = ({ onUserIdChange, onShowChatChange }) => {
     const [aboutMe, setAboutMe] = useState('');
     const [userId, setUserId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
-    const [showChat, setShowChat] = useState(false);
 
     // Check for existing user ID in localStorage on component mount
     useEffect(() => {
         const storedUserId = localStorage.getItem('userId');
         if (storedUserId) {
             setUserId(storedUserId);
-            setShowChat(true);
+            onUserIdChange(storedUserId);
+            onShowChatChange(true);
             fetchUserData(storedUserId);
         }
-    }, []);
+    }, [onUserIdChange, onShowChatChange]);
 
     // Fetch user data if we have a userId
     const fetchUserData = async (id) => {
@@ -34,7 +33,8 @@ const AboutMe = () => {
             if (error.response && error.response.status === 404) {
                 localStorage.removeItem('userId');
                 setUserId('');
-                setShowChat(false);
+                onUserIdChange('');
+                onShowChatChange(false);
             }
         }
     };
@@ -66,7 +66,8 @@ const AboutMe = () => {
                 // Save the user ID to localStorage
                 localStorage.setItem('userId', response.id);
                 setUserId(response.id);
-                setShowChat(true);
+                onUserIdChange(response.id);
+                onShowChatChange(true);
                 setMessage('Your information has been saved!');
             }
         } catch (error) {
@@ -79,46 +80,36 @@ const AboutMe = () => {
     };
 
     return (
-        <div className="container">
-            <div className="content-wrapper">
-                {showChat && userId && (
-                    <div className="chat-wrapper">
-                        <Chat userId={userId} />
-                    </div>
-                )}
+        <div className="about-me-section">
+            <h2>About Me</h2>
 
-                <div className="about-me-section">
-                    <h1>About Me</h1>
+            <form onSubmit={handleSubmit} className="form-group">
+                <label htmlFor="aboutMe">Tell us about yourself:</label>
+                <textarea
+                    id="aboutMe"
+                    value={aboutMe}
+                    onChange={(e) => setAboutMe(e.target.value)}
+                    placeholder="Share something about yourself..."
+                    disabled={isLoading}
+                    maxLength={500}
+                />
 
-                    <form onSubmit={handleSubmit} className="form-group">
-                        <label htmlFor="aboutMe">Tell us about yourself:</label>
-                        <textarea
-                            id="aboutMe"
-                            value={aboutMe}
-                            onChange={(e) => setAboutMe(e.target.value)}
-                            placeholder="Share something about yourself..."
-                            disabled={isLoading}
-                            maxLength={500}
-                        />
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Saving...' : userId ? 'Update' : 'Save'}
+                </button>
+            </form>
 
-                        <button type="submit" disabled={isLoading}>
-                            {isLoading ? 'Saving...' : userId ? 'Update' : 'Save'}
-                        </button>
-                    </form>
-
-                    {message && (
-                        <div className={isError ? 'error' : 'success-message'}>
-                            {message}
-                        </div>
-                    )}
-
-                    {userId && (
-                        <div className="user-id">
-                            <small>User ID: {userId}</small>
-                        </div>
-                    )}
+            {message && (
+                <div className={isError ? 'error' : 'success-message'}>
+                    {message}
                 </div>
-            </div>
+            )}
+
+            {userId && (
+                <div className="user-id">
+                    <small>User ID: {userId}</small>
+                </div>
+            )}
         </div>
     );
 };
