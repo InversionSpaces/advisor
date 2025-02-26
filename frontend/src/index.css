@@ -21,6 +21,8 @@
     --input-focus-border: #646cff;
     --success-color: #4caf50;
     --error-color: #f44336;
+    --chat-bg: rgba(0, 0, 0, 0.2);
+    --message-bg: rgba(79, 70, 229, 0.2);
 }
 
 * {
@@ -74,6 +76,13 @@ h1 {
     font-size: 2.5em;
     line-height: 1.1;
     margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+h2 {
+    font-size: 1.8em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
     color: var(--text-color);
 }
 
@@ -174,6 +183,28 @@ textarea::placeholder {
     color: rgba(255, 255, 255, 0.4);
 }
 
+input[type="text"] {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+input[type="text"]:focus {
+    border-color: var(--input-focus-border);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.3);
+}
+
+input[type="text"]::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
 .success-message {
     color: var(--success-color);
     padding: 0.75rem;
@@ -203,12 +234,78 @@ textarea::placeholder {
     box-sizing: border-box;
 }
 
+/* Chat styles */
+.chat-container {
+    width: 100%;
+    margin-bottom: 2rem;
+    background-color: var(--chat-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.messages-container {
+    height: 250px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: left;
+}
+
+.no-messages {
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    margin: auto 0;
+}
+
+.message {
+    padding: 0.75rem 1rem;
+    background-color: var(--message-bg);
+    border-radius: 8px;
+    max-width: 85%;
+    align-self: flex-start;
+    word-break: break-word;
+}
+
+.message-text {
+    margin-bottom: 0.25rem;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    text-align: right;
+}
+
+.message-form {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.message-form input {
+    flex-grow: 1;
+}
+
+.message-form button {
+    width: auto;
+    white-space: nowrap;
+    margin-top: 0;
+}
+
 @media (prefers-color-scheme: light) {
     :root {
         --text-color: #213547;
         --bg-color: #ffffff;
         --input-bg: #f9f9f9;
         --input-border: #ddd;
+        --chat-bg: rgba(0, 0, 0, 0.05);
+        --message-bg: rgba(79, 70, 229, 0.1);
     }
 
     body {
@@ -234,7 +331,24 @@ textarea::placeholder {
         color: rgba(0, 0, 0, 0.4);
     }
 
+    input[type="text"] {
+        background-color: var(--input-bg);
+        color: var(--text-color);
+    }
+
+    input[type="text"]::placeholder {
+        color: rgba(0, 0, 0, 0.4);
+    }
+
     .user-id {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .no-messages {
+        color: rgba(0, 0, 0, 0.5);
+    }
+
+    .messages-container {
         background-color: rgba(0, 0, 0, 0.05);
     }
 }
@@ -248,7 +362,27 @@ textarea::placeholder {
         font-size: 2em;
     }
 
+    h2 {
+        font-size: 1.5em;
+    }
+
     .app-description {
         font-size: 1rem;
+    }
+
+    .chat-container {
+        padding: 1rem;
+    }
+
+    .messages-container {
+        height: 200px;
+    }
+
+    .message-form {
+        flex-direction: column;
+    }
+
+    .message-form button {
+        width: 100%;
     }
 }

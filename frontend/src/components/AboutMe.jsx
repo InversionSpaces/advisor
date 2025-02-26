@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { userApi } from '../services/api';
+import Chat from './Chat';
 
 const AboutMe = () => {
     const [aboutMe, setAboutMe] = useState('');
@@ -7,12 +8,14 @@ const AboutMe = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
+    const [showChat, setShowChat] = useState(false);
 
     // Check for existing user ID in localStorage on component mount
     useEffect(() => {
         const storedUserId = localStorage.getItem('userId');
         if (storedUserId) {
             setUserId(storedUserId);
+            setShowChat(true);
             fetchUserData(storedUserId);
         }
     }, []);
@@ -31,6 +34,7 @@ const AboutMe = () => {
             if (error.response && error.response.status === 404) {
                 localStorage.removeItem('userId');
                 setUserId('');
+                setShowChat(false);
             }
         }
     };
@@ -62,6 +66,7 @@ const AboutMe = () => {
                 // Save the user ID to localStorage
                 localStorage.setItem('userId', response.id);
                 setUserId(response.id);
+                setShowChat(true);
                 setMessage('Your information has been saved!');
             }
         } catch (error) {
@@ -75,6 +80,10 @@ const AboutMe = () => {
 
     return (
         <div className="container">
+            {showChat && userId && (
+                <Chat userId={userId} />
+            )}
+
             <h1>About Me</h1>
 
             <form onSubmit={handleSubmit} className="form-group">

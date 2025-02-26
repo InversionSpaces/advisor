@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from ..models.user import UserCreate, UserResponse, UserUpdate, serialize_user
+from ..models.user import UserCreate, UserResponse, UserUpdate, MessageCreate, MessagesResponse, serialize_user, serialize_messages
 from ..database.mongodb import user_collection
 import uuid
 from datetime import datetime
@@ -30,6 +30,7 @@ async def create_user(user: UserCreate):
         "_id": user_id,
         "about_me": user.about_me,
         "history": [history_entry],
+        "messages": [],
         "created_at": current_time,
         "updated_at": current_time
     }
@@ -111,4 +112,58 @@ async def update_user(user_id: str, user_update: UserUpdate):
     
     # Return updated user
     updated_user = user_collection.find_one({"_id": user_id})
-    return serialize_user(updated_user) 
+    return serialize_user(updated_user)
+
+@router.post("/{user_id}/messages", status_code=status.HTTP_201_CREATED)
+async def create_message(user_id: str, message: MessageCreate):
+    """
+    Add a new message to the user's messages list.
+    """
+    # Check if user exists
+    existing_user = user_collection.find_one({"_id": user_id})
+    if not existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with ID {user_id} not found"
+        )
+    
+    current_time = datetime.utcnow()
+    
+    # Create message entry
+    message_entry = {
+        "text": message.text,
+        "created_at": current_time.isoformat()
+    }
+    
+    # Update user
+    result = user_collection.update_one(
+        {"_id": user_id},
+        {
+            "$push": {
+                "messages": message_entry
+            }
+        }
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to add message"
+        )
+    
+    return message_entry
+
+@router.get("/{user_id}/messages", response_model=MessagesResponse)
+async def get_messages(user_id: str):
+    """
+    Get all messages for a user.
+    """
+    user = user_collection.find_one({"_id": user_id})
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with ID {user_id} not found"
+        )
+    
+    return serialize_messages(user) 
