@@ -57,9 +57,12 @@ export const userApi = {
     },
 
     // Add a new message
-    addMessage: async (userId, messageText) => {
+    addMessage: async (userId, messageText, origin = "user") => {
         try {
-            const response = await api.post(`/users/${userId}/messages`, { text: messageText });
+            const response = await api.post(`/users/${userId}/messages`, {
+                text: messageText,
+                origin: origin
+            });
             return response.data;
         } catch (error) {
             console.error('Error adding message:', error);

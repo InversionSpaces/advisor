@@ -3,6 +3,7 @@ from ..models.user import UserCreate, UserResponse, UserUpdate, MessageCreate, M
 from ..database.mongodb import user_collection
 import uuid
 from datetime import datetime
+from ..services.ai_service import generate_response
 
 router = APIRouter(
     prefix="/users",
@@ -117,7 +118,7 @@ async def update_user(user_id: str, user_update: UserUpdate):
 @router.post("/{user_id}/messages", status_code=status.HTTP_201_CREATED)
 async def create_message(user_id: str, message: MessageCreate):
     """
-    Add a new message to the user's messages list.
+    Add a new message to the user's messages list and generate an AI response.
     """
     # Check if user exists
     existing_user = user_collection.find_one({"_id": user_id})
@@ -129,13 +130,14 @@ async def create_message(user_id: str, message: MessageCreate):
     
     current_time = datetime.utcnow()
     
-    # Create message entry
+    # Create message entry with origin
     message_entry = {
         "text": message.text,
-        "created_at": current_time.isoformat()
+        "created_at": current_time.isoformat(),
+        "origin": message.origin
     }
     
-    # Update user
+    # Update user with the user message
     result = user_collection.update_one(
         {"_id": user_id},
         {
@@ -151,7 +153,30 @@ async def create_message(user_id: str, message: MessageCreate):
             detail="Failed to add message"
         )
     
-    return message_entry
+    # Generate AI response
+    ai_response = await generate_response(message.text)
+    
+    # Add AI response to messages
+    result = user_collection.update_one(
+        {"_id": user_id},
+        {
+            "$push": {
+                "messages": ai_response
+            }
+        }
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to add AI response"
+        )
+    
+    # Get updated user with all messages
+    updated_user = user_collection.find_one({"_id": user_id})
+    
+    # Return all messages
+    return serialize_messages(updated_user)
 
 @router.get("/{user_id}/messages", response_model=MessagesResponse)
 async def get_messages(user_id: str):
