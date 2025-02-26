@@ -36,4 +36,18 @@ The built files will be in the `dist` directory.
 - "About Me" text input field
 - Persistent user identification with UUID
 - Local storage for user ID
-- Automatic data retrieval for returning users 
+- Automatic data retrieval for returning users
+
+## Components
+
+- `App.jsx`: Main application component
+- `AboutMe.jsx`: Component for managing the "About Me" form
+- `api.js`: Service for communicating with the backend API
+
+## API Integration
+
+The frontend communicates with the backend using the following endpoints:
+
+- `POST /users`: Create a new user
+- `GET /users/{user_id}`: Get user information
+- `PUT /users/{user_id}`: Update user information 

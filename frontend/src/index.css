@@ -11,6 +11,20 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --text-color: rgba(255, 255, 255, 0.87);
+    --bg-color: #242424;
+    --input-bg: #1a1a1a;
+    --input-border: #3a3a3a;
+    --input-focus-border: #646cff;
+    --success-color: #4caf50;
+    --error-color: #f44336;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
@@ -19,6 +33,8 @@ body {
     place-items: center;
     min-width: 320px;
     min-height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
 }
 
 #root {
@@ -26,76 +42,213 @@ body {
     margin: 0 auto;
     padding: 2rem;
     text-align: center;
+    width: 100%;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    min-height: 80vh;
+    justify-content: space-between;
+}
+
+header {
+    margin-bottom: 2rem;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+    opacity: 0.7;
 }
 
 h1 {
     font-size: 2.5em;
     line-height: 1.1;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.app-description {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
 }
 
 button {
+    width: 100%;
     border-radius: 8px;
     border: 1px solid transparent;
-    padding: 0.6em 1.2em;
+    padding: 0.8em 1.2em;
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
-    background-color: #1a1a1a;
+    background-color: var(--primary-color);
+    color: white;
     cursor: pointer;
-    transition: border-color 0.25s;
+    transition: background-color 0.25s, transform 0.1s;
+    margin-top: 1rem;
+    box-sizing: border-box;
 }
 
 button:hover {
-    border-color: #646cff;
+    background-color: var(--primary-hover);
+}
+
+button:active {
+    transform: scale(0.98);
 }
 
 button:focus,
 button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
+    outline: 2px solid var(--input-focus-border);
+    outline-offset: 2px;
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
     width: 100%;
     max-width: 500px;
     margin: 0 auto;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 0.5rem;
+    gap: 0.75rem;
     margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-align: left;
+    margin-bottom: 0.25rem;
 }
 
 textarea {
     width: 100%;
-    min-height: 150px;
-    padding: 0.5rem;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    height: 150px;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--text-color);
     font-family: inherit;
     font-size: 1rem;
-    resize: vertical;
+    line-height: 1.5;
+    resize: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    box-sizing: border-box;
+}
+
+textarea:focus {
+    border-color: var(--input-focus-border);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.3);
+}
+
+textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
 }
 
 .success-message {
-    color: #4caf50;
+    color: var(--success-color);
+    padding: 0.75rem;
+    border-radius: 6px;
+    background-color: rgba(76, 175, 80, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.error {
+    color: var(--error-color);
+    padding: 0.75rem;
+    border-radius: 6px;
+    background-color: rgba(244, 67, 54, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.user-id {
+    font-size: 0.9rem;
+    opacity: 0.8;
     margin-top: 1rem;
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 @media (prefers-color-scheme: light) {
     :root {
-        color: #213547;
-        background-color: #ffffff;
+        --text-color: #213547;
+        --bg-color: #ffffff;
+        --input-bg: #f9f9f9;
+        --input-border: #ddd;
     }
 
-    button {
-        background-color: #f9f9f9;
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+
+    footer {
+        border-top-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+        background-color: rgba(0, 0, 0, 0.02);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    textarea {
+        background-color: var(--input-bg);
+        color: var(--text-color);
+    }
+
+    textarea::placeholder {
+        color: rgba(0, 0, 0, 0.4);
+    }
+
+    .user-id {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .app-description {
+        font-size: 1rem;
     }
 }

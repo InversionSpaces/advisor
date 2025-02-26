@@ -13,6 +13,7 @@ A simple web application with FastAPI backend, React frontend, and MongoDB datab
 - Save and update user information
 - Persistent user identification with UUID
 - MongoDB database for data storage
+- Internal history tracking of all "About Me" updates with timestamps (for later analysis)
 
 ## Setup and Running
 
@@ -67,10 +68,18 @@ A simple web application with FastAPI backend, React frontend, and MongoDB datab
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
 
+### API Endpoints
+
+- `GET /`: Root endpoint with API information
+- `POST /users`: Create a new user
+- `GET /users/{user_id}`: Get user information
+- `PUT /users/{user_id}`: Update user information
+
 ## Development
 
 - Backend: The FastAPI application follows a modular structure with routers, models, and database modules.
 - Frontend: The React application uses functional components with hooks for state management.
+- Data Analysis: The backend maintains a history of all "About Me" updates internally for later analysis.
 
 ## License
 

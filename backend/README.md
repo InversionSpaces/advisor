@@ -42,4 +42,29 @@ The API will be available at http://localhost:8000
 - `GET /`: Root endpoint with API information
 - `POST /users`: Create a new user
 - `GET /users/{user_id}`: Get user information
-- `PUT /users/{user_id}`: Update user information 
+- `PUT /users/{user_id}`: Update user information
+
+## Internal Data Model
+
+The application internally stores user data with the following structure:
+
+```json
+{
+  "_id": "uuid-string",
+  "about_me": "Current about me text",
+  "history": [
+    {
+      "text": "First about me entry",
+      "created_at": "2023-10-25T12:34:56.789Z"
+    },
+    {
+      "text": "Updated about me text",
+      "created_at": "2023-10-26T10:11:12.345Z"
+    }
+  ],
+  "created_at": "2023-10-25T12:34:56.789Z",
+  "updated_at": "2023-10-26T10:11:12.345Z"
+}
+```
+
+The history of "about_me" entries is maintained internally for later analysis but is not exposed through the API. The API only returns the current "about_me" value. 

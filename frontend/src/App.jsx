@@ -6,6 +6,9 @@ function App() {
         <div className="app">
             <header>
                 <h1>Advisor App</h1>
+                <p className="app-description">
+                    Your personal space to share and save information about yourself.
+                </p>
             </header>
             <main>
                 <AboutMe />
