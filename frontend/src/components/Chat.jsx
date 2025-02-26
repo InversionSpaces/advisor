@@ -66,8 +66,8 @@ const Chat = ({ userId }) => {
     };
 
     return (
-        <div className="chat-container">
-            <h2>Chat</h2>
+        <div className="chat-section">
+            <h2>Chat with advisor</h2>
 
             <div className="messages-container" ref={messagesContainerRef}>
                 {messages.length === 0 ? (
