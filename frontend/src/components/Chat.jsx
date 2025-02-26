@@ -6,6 +6,7 @@ const Chat = ({ userId }) => {
     const [newMessage, setNewMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef(null);
+    const messagesContainerRef = useRef(null);
 
     // Fetch messages on component mount and when userId changes
     useEffect(() => {
@@ -16,7 +17,9 @@ const Chat = ({ userId }) => {
 
     // Scroll to bottom of messages when messages change
     useEffect(() => {
-        scrollToBottom();
+        if (messages.length > 0) {
+            scrollToBottom();
+        }
     }, [messages]);
 
     const fetchMessages = async () => {
@@ -51,7 +54,10 @@ const Chat = ({ userId }) => {
     };
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        // Scroll only the messages container, not the entire page
+        if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
     };
 
     const formatDate = (dateString) => {
@@ -63,7 +69,7 @@ const Chat = ({ userId }) => {
         <div className="chat-container">
             <h2>Chat</h2>
 
-            <div className="messages-container">
+            <div className="messages-container" ref={messagesContainerRef}>
                 {messages.length === 0 ? (
                     <div className="no-messages">No messages yet. Start the conversation!</div>
                 ) : (

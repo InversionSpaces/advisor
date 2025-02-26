@@ -80,39 +80,45 @@ const AboutMe = () => {
 
     return (
         <div className="container">
-            {showChat && userId && (
-                <Chat userId={userId} />
-            )}
+            <div className="content-wrapper">
+                {showChat && userId && (
+                    <div className="chat-wrapper">
+                        <Chat userId={userId} />
+                    </div>
+                )}
 
-            <h1>About Me</h1>
+                <div className="about-me-section">
+                    <h1>About Me</h1>
 
-            <form onSubmit={handleSubmit} className="form-group">
-                <label htmlFor="aboutMe">Tell us about yourself:</label>
-                <textarea
-                    id="aboutMe"
-                    value={aboutMe}
-                    onChange={(e) => setAboutMe(e.target.value)}
-                    placeholder="Share something about yourself..."
-                    disabled={isLoading}
-                    maxLength={500}
-                />
+                    <form onSubmit={handleSubmit} className="form-group">
+                        <label htmlFor="aboutMe">Tell us about yourself:</label>
+                        <textarea
+                            id="aboutMe"
+                            value={aboutMe}
+                            onChange={(e) => setAboutMe(e.target.value)}
+                            placeholder="Share something about yourself..."
+                            disabled={isLoading}
+                            maxLength={500}
+                        />
 
-                <button type="submit" disabled={isLoading}>
-                    {isLoading ? 'Saving...' : userId ? 'Update' : 'Save'}
-                </button>
-            </form>
+                        <button type="submit" disabled={isLoading}>
+                            {isLoading ? 'Saving...' : userId ? 'Update' : 'Save'}
+                        </button>
+                    </form>
 
-            {message && (
-                <div className={isError ? 'error' : 'success-message'}>
-                    {message}
+                    {message && (
+                        <div className={isError ? 'error' : 'success-message'}>
+                            {message}
+                        </div>
+                    )}
+
+                    {userId && (
+                        <div className="user-id">
+                            <small>User ID: {userId}</small>
+                        </div>
+                    )}
                 </div>
-            )}
-
-            {userId && (
-                <div className="user-id">
-                    <small>User ID: {userId}</small>
-                </div>
-            )}
+            </div>
         </div>
     );
 };
