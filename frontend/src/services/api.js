@@ -44,6 +44,28 @@ export const userApi = {
             throw error;
         }
     },
+
+    // Get user's messages
+    getMessages: async (userId) => {
+        try {
+            const response = await api.get(`/users/${userId}/messages`);
+            return response.data;
+        } catch (error) {
+            console.error('Error getting messages:', error);
+            throw error;
+        }
+    },
+
+    // Add a new message
+    addMessage: async (userId, messageText) => {
+        try {
+            const response = await api.post(`/users/${userId}/messages`, { text: messageText });
+            return response.data;
+        } catch (error) {
+            console.error('Error adding message:', error);
+            throw error;
+        }
+    }
 };
 
 export default api; 
