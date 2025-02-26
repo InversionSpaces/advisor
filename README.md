@@ -63,6 +63,47 @@ A simple web application with FastAPI backend, React frontend, and MongoDB datab
 
    The application will be available at http://localhost:3000
 
+## Code Quality and Linting
+
+### Backend
+
+The backend uses the following tools for code quality:
+
+- **Flake8**: For linting and style checking
+- **Black**: For code formatting
+- **isort**: For import sorting
+
+Run linting:
+```
+cd backend
+flake8 app
+```
+
+Run automatic formatting:
+```
+cd backend
+isort app && black app
+```
+
+### Frontend
+
+The frontend uses the following tools for code quality:
+
+- **ESLint**: For linting and style checking
+- **Prettier**: For code formatting
+
+Run linting:
+```
+cd frontend
+npm run lint
+```
+
+Run automatic formatting:
+```
+cd frontend
+npm run lint:fix && npm run format
+```
+
 ## API Documentation
 
 - Swagger UI: http://localhost:8000/docs

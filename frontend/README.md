@@ -22,6 +22,37 @@ npm run dev
 
 The application will be available at http://localhost:3000
 
+## Linting and Code Formatting
+
+The project uses the following tools for code quality:
+
+- **ESLint**: For linting and style checking
+- **Prettier**: For code formatting
+
+### Running Linters
+
+To check your code with ESLint:
+```
+npm run lint
+```
+
+### Automatic Code Formatting
+
+To automatically fix ESLint issues:
+```
+npm run lint:fix
+```
+
+To format your code with Prettier:
+```
+npm run format
+```
+
+For the best results, run both commands in sequence:
+```
+npm run lint:fix && npm run format
+```
+
 ## Building for Production
 
 Build the application for production:

@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from .routers import users
 
 # Create FastAPI app
 app = FastAPI(
     title="Advisor API",
     description="API for managing user profiles with 'about me' information",
-    version="0.1.0"
+    version="0.1.0",
 )
 
 # Configure CORS
@@ -26,11 +27,8 @@ app.add_middleware(
 # Include routers
 app.include_router(users.router)
 
+
 # Root endpoint
 @app.get("/")
 async def root():
-    return {
-        "message": "Welcome to the Advisor API",
-        "docs": "/docs",
-        "version": "0.1.0"
-    } 
+    return {"message": "Welcome to the Advisor API", "docs": "/docs", "version": "0.1.0"}
