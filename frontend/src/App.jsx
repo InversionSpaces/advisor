@@ -21,7 +21,7 @@ function App() {
             <header>
                 <h1>Advisor App</h1>
                 <p className="app-description">
-                    Your personal space to share and save information about yourself.
+                    Your personalized AI-powered educational and career advisor.
                 </p>
             </header>
             <main>

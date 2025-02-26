@@ -57,11 +57,10 @@ export const userApi = {
     },
 
     // Add a new message
-    addMessage: async (userId, messageText, origin = "user") => {
+    addMessage: async (userId, messageText) => {
         try {
             const response = await api.post(`/users/${userId}/messages`, {
-                text: messageText,
-                origin: origin
+                text: messageText
             });
             return response.data;
         } catch (error) {
