@@ -1,6 +1,7 @@
 import os
-from pymongo import MongoClient
+
 from dotenv import load_dotenv
+from pymongo import MongoClient
 
 # Load environment variables
 load_dotenv()
@@ -16,9 +17,10 @@ db = client[DB_NAME]
 # Collection for user profiles
 user_collection = db.users
 
+
 def get_db():
     """
     Get database connection.
     Returns MongoDB database instance.
     """
-    return db 
+    return db

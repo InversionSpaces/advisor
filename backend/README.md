@@ -32,6 +32,37 @@ python run.py
 
 The API will be available at http://localhost:8000
 
+## Linting and Code Formatting
+
+The project uses the following tools for code quality:
+
+- **Flake8**: For linting and style checking
+- **Black**: For code formatting
+- **isort**: For import sorting
+
+### Running Linters
+
+To check your code with Flake8:
+```
+flake8 app
+```
+
+### Automatic Code Formatting
+
+To automatically format your code:
+```
+# Format with Black
+black app
+
+# Sort imports with isort
+isort app
+```
+
+You can run both formatters in sequence to ensure your code is properly formatted:
+```
+isort app && black app
+```
+
 ## API Documentation
 
 - Swagger UI: http://localhost:8000/docs
