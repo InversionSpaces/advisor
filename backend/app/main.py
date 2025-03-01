@@ -37,7 +37,7 @@ async def root():
     return {"message": "Welcome to the Advisor API", "docs": "/api/docs", "version": "0.1.0"}
 
 # Mount static files
-frontend_path = os.getenv("FRONTEND_PATH", "../frontend/dist")
+frontend_path = os.getenv("FRONTEND_PATH")
 
 # Check if frontend build exists
 if os.path.exists(frontend_path):

@@ -11,33 +11,20 @@ services:
     volumes:
       - mongodb_data:/data/db
 
-  # Frontend build service (temporary, only used during build)
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: advisor-frontend-build
-    volumes:
-      - frontend_build:/app/dist
-
   # Backend service (serves API and static frontend)
-  backend:
+  advisor:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: advisor-backend
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: advisor
     restart: unless-stopped
-    volumes:
-      - frontend_build:/app/frontend/dist
     depends_on:
       - mongodb
-      - frontend
     environment:
       - MONGODB_URI=mongodb://mongodb:27017
       - DB_NAME=advisor
-      - FRONTEND_PATH=/app/frontend/dist
-      - ENVIRONMENT=production
       - FRONTEND_ADDRESSES=http://localhost:8000,http://0.0.0.0:8000
+      - ENVIRONMENT=production
       - HOST=0.0.0.0
       - PORT=8000
     ports:
@@ -45,4 +32,3 @@ services:
 
 volumes:
   mongodb_data:
-  frontend_build:
