@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # MongoDB service
   mongodb:
-    image: mongo:6.0
+    image: docker.io/mongo:6.0
     container_name: advisor-mongodb
     restart: unless-stopped
     environment:
@@ -33,12 +33,15 @@ services:
       - mongodb
       - frontend
     environment:
-      - MONGODB_URI=mongodb://localhost:27017
+      - MONGODB_URI=mongodb://mongodb:27017
       - DB_NAME=advisor
       - FRONTEND_PATH=/app/frontend/dist
       - ENVIRONMENT=production
+      - FRONTEND_ADDRESSES=http://localhost:8000,http://0.0.0.0:8000
       - HOST=0.0.0.0
       - PORT=8000
+    ports:
+      - "8000:8000"
 
 volumes:
   mongodb_data:

@@ -17,11 +17,8 @@ app = FastAPI(
 )
 
 # Configure CORS
-origins = [
-    "http://localhost:3000",  # React frontend
-    "http://localhost:5173",  # Vite dev server
-    "*",  # Allow all origins in production
-]
+frontend_addresses = os.getenv("FRONTEND_ADDRESSES", "http://localhost:8000")
+origins = frontend_addresses.split(",")
 
 app.add_middleware(
     CORSMiddleware,
