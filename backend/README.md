@@ -23,6 +23,8 @@ A FastAPI-based backend for the Advisor application.
      DB_NAME=advisor_db
      ```
 
+4. Make sure the `OPENAI_API_KEY` environment variable is set to active key
+
 ## Running the Application
 
 Run the application with:

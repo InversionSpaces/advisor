@@ -42,6 +42,7 @@ If you're seeing API responses instead of the frontend:
 2. Check that the frontend volume is properly mounted in the backend container
 3. Verify that the `FRONTEND_PATH` environment variable is set correctly
 4. Use the rebuild script to ensure a clean rebuild
+5. Make sure the `OPENAI_API_KEY` environment variable is set to active key
 
 ## Development Setup
 
