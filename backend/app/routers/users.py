@@ -145,7 +145,7 @@ async def create_message(user_id: str, message: MessageCreate):
         )
 
     # Generate AI response
-    ai_response = await generate_response(message.text)
+    ai_response = await generate_response((await get_user(user_id))["about_me"], [message for message in (await get_messages(user_id))["messages"]])
 
     # Add AI response to messages
     result = user_collection.update_one({"_id": user_id}, {"$push": {"messages": ai_response}})
