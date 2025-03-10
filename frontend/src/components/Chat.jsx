@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { userApi } from '../services/api';
 
 const Chat = ({ userId }) => {
@@ -79,7 +80,9 @@ const Chat = ({ userId }) => {
                 ) : (
                     messages.map((message, index) => (
                         <div key={index} className={`message ${message.origin === 'ai' ? 'ai-message' : 'user-message'}`}>
-                            <div className="message-text">{message.text}</div>
+                            <div className="message-text">
+                                <ReactMarkdown>{message.text}</ReactMarkdown>
+                            </div>
                             <div className="message-time">{formatDate(message.created_at)}</div>
                         </div>
                     ))
@@ -104,4 +107,4 @@ const Chat = ({ userId }) => {
     );
 };
 
-export default Chat; 
+export default Chat;
