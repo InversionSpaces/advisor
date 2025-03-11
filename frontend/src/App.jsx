@@ -26,6 +26,15 @@ function App() {
             </header>
             <main>
                 <div className="container">
+                    {!userId && (
+                        <div className="usage-instructions">
+                            <h2>How to use the app:</h2>
+                            <ol>
+                                <li>Describe yourself, your background, and interests in the form below</li>
+                                <li>Once saved, you can start chatting with your AI advisor for personalized guidance</li>
+                            </ol>
+                        </div>
+                    )}
                     <div className="content-wrapper">
                         {showChat && userId && (
                             <Chat userId={userId} />

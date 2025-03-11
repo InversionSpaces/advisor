@@ -40,9 +40,9 @@ body {
 }
 
 #root {
-    max-width: 1440px;
+    max-width: 1920px;
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: 1rem;
     text-align: center;
     width: 100%;
 }
@@ -133,7 +133,7 @@ button:disabled {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 800px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 1.5rem;
     background-color: rgba(255, 255, 255, 0.03);
@@ -271,7 +271,7 @@ input[type="text"]::placeholder {
 }
 
 .messages-container {
-    height: 300px;
+    height: 600px;
     width: 100%;
     overflow-y: auto;
     margin-bottom: 1rem;
@@ -415,7 +415,7 @@ input[type="text"]::placeholder {
 
 @media (max-width: 768px) {
     #root {
-        padding: 1rem;
+        padding: 0.5rem;
     }
 
     .container {
@@ -442,7 +442,7 @@ input[type="text"]::placeholder {
     }
 
     .messages-container {
-        height: 250px;
+        height: 400px;
         padding: 0.5rem;
     }
 
@@ -453,4 +453,18 @@ input[type="text"]::placeholder {
     .message-form button {
         width: 100%;
     }
+}
+
+.usage-instructions {
+    text-align: left;
+    padding: 0 20px;
+    margin-bottom: 20px;
+}
+
+.usage-instructions h2 {
+    text-align: center;
+}
+
+ol {
+    padding-left: 2rem;
 }

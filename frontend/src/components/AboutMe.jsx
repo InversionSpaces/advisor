@@ -81,15 +81,14 @@ const AboutMe = ({ onUserIdChange, onShowChatChange }) => {
 
     return (
         <div className="about-me-section">
-            <h2>About Me</h2>
+            <h2>About me:</h2>
 
             <form onSubmit={handleSubmit} className="form-group">
-                <label htmlFor="aboutMe">Tell us about yourself:</label>
                 <textarea
                     id="aboutMe"
                     value={aboutMe}
                     onChange={(e) => setAboutMe(e.target.value)}
-                    placeholder="Share something about yourself..."
+                    placeholder="Share your background, interests, and goals..."
                     disabled={isLoading}
                     maxLength={500}
                 />
