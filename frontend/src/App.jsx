@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import AboutMe from './components/AboutMe';
 import Chat from './components/Chat';
 
+const FEEDBACK_FORM_URL = import.meta.env.VITE_FEEDBACK_FORM_URL;
+
 function App() {
     const [userId, setUserId] = useState('');
     const [showChat, setShowChat] = useState(false);
-    const formUrl =
-    'https://docs.google.com/forms/d/e/1FAIpQLSc0dWnbAFH4emva--_GGynZY-OA7H2zKmvBQKH0q-KM5ftMag/viewform?usp=header';
 
     // Handle user ID changes from AboutMe component
     const handleUserIdChange = (id) => {
@@ -41,12 +41,14 @@ function App() {
                         {showChat && userId && (
                             <div className="chat-and-feedback">
                                 <Chat userId={userId} />
-                                <button
-                                    onClick={() => window.open(formUrl, '_blank')}
-                                    className="feedback-button"
-                                >
-                                    Give Feedback
-                                </button>
+                                {FEEDBACK_FORM_URL && (
+                                    <button
+                                        onClick={() => window.open(FEEDBACK_FORM_URL, '_blank')}
+                                        className="feedback-button"
+                                    >
+                                        Give Feedback
+                                    </button>
+                                )}
                             </div>
                         )}
 

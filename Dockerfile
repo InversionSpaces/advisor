@@ -5,6 +5,10 @@ WORKDIR /frontend
 COPY ./frontend/package.json ./frontend/package-lock.json ./
 RUN npm ci
 COPY ./frontend .
+
+ARG FEEDBACK_FORM_URL
+ENV VITE_FEEDBACK_FORM_URL=${FEEDBACK_FORM_URL}
+
 RUN npm run build
 
 # Build backend

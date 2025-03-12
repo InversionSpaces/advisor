@@ -16,6 +16,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+      args:
+        - FEEDBACK_FORM_URL=${FEEDBACK_FORM_URL}
     container_name: advisor
     restart: unless-stopped
     depends_on:

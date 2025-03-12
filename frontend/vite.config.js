@@ -4,7 +4,14 @@ import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [react()],
+    plugins: [react(), {
+        name: 'check-env',
+        configResolved() {
+            if (!process.env.VITE_FEEDBACK_FORM_URL) {
+                throw new Error('VITE_FEEDBACK_FORM_URL is not set');
+            }
+        },
+    }],
     server: {
         port: 3000,
         open: true,
